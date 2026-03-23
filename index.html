@@ -2,567 +2,296 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Walkssy feet pics // TOOLKIT v1.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senpai Studios // TOOLKIT</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #0b0e14 0%, #0a0c12 100%);
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, monospace;
+            background: #0a0c12;
+            font-family: monospace;
             min-height: 100vh;
-            padding: 2rem 1.5rem;
-            position: relative;
-        }
-
-        /* glitch overlay effect */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(255,0,80,0.02) 0px, rgba(255,0,80,0.02) 2px, transparent 2px, transparent 6px);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        /* AUTHENTICATION PANEL (initial) */
-        .auth-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #0f111a 0%, #05060a 100%);
-            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
-            transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-
-        .auth-card {
-            background: rgba(10, 14, 23, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 75, 130, 0.4);
-            border-radius: 2rem;
-            padding: 2.5rem 2rem;
-            max-width: 480px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5), 0 0 20px rgba(255, 40, 100, 0.2);
-            animation: fadeInUp 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .senpai-logo {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ff4d7a, #ff9966);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-        }
-
-        .auth-card h2 {
-            color: #fff;
-            font-size: 1.5rem;
-            margin: 1rem 0 0.5rem;
-            font-weight: 500;
-        }
-
-        .auth-card p {
-            color: #9ca3af;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-
-        .auth-btn {
-            background: linear-gradient(90deg, #ff3b6f, #ff8c5a);
-            border: none;
-            padding: 0.9rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.2s;
+        
+        /* Auth Panel */
+        .auth-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            font-family: inherit;
-            box-shadow: 0 5px 15px rgba(255, 59, 111, 0.3);
+            height: 100%;
+            background: #05070c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
         }
-
-        .auth-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 22px rgba(255, 59, 111, 0.5);
-            background: linear-gradient(90deg, #ff2f62, #ff7a42);
-        }
-
-        /* MAIN DASHBOARD (hidden until auth) */
-        .dashboard {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease;
-        }
-
-        .dashboard.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* header section */
-        .header {
+        .auth-card {
+            background: #0f111a;
+            border: 1px solid #ff3366;
+            border-radius: 24px;
+            padding: 2rem;
             text-align: center;
-            margin-bottom: 2.5rem;
-            border-bottom: 1px solid rgba(255, 75, 130, 0.3);
-            padding-bottom: 1.5rem;
+            max-width: 400px;
         }
-
-        .glitch-text {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ff4d7a, #ffaa66, #ff4d7a);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: shimmer 3s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .sub {
-            color: #b9c3d4;
-            font-family: monospace;
-            letter-spacing: 1px;
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .badge {
-            background: #1f1b2e;
-            display: inline-block;
-            padding: 0.2rem 1rem;
+        .auth-card h1 { color: #ff6680; margin-bottom: 1rem; }
+        .auth-card p { color: #888; margin-bottom: 1.5rem; }
+        .auth-btn {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 1rem;
             border-radius: 40px;
-            font-size: 0.7rem;
-            color: #ff8a6f;
-            border-left: 2px solid #ff5e7e;
-            margin-top: 0.8rem;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
         }
-
-        /* tools grid */
+        .auth-btn:hover { background: #ff5577; }
+        
+        /* Loading Screen */
+        .loading-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #05070c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            display: none;
+        }
+        .loading-card {
+            background: #0f111a;
+            border: 1px solid #ff6680;
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 450px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #2a2a3a;
+            border-top: 3px solid #ff3366;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text { color: #ff99aa; margin-bottom: 1rem; font-size: 1.1rem; }
+        .log-area {
+            background: #010103;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.7rem;
+            color: #7effb3;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+        .log-line { margin: 4px 0; border-left: 2px solid #ff6680; padding-left: 8px; }
+        
+        /* Dashboard */
+        .dashboard {
+            max-width: 1200px;
+            margin: 2rem;
+            display: none;
+        }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { color: #ff6680; margin-bottom: 0.5rem; }
+        .badge { background: #1f1b2e; display: inline-block; padding: 4px 16px; border-radius: 40px; color: #ffaa88; margin-top: 10px; }
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.6rem;
-            margin: 2rem 0;
+            gap: 1rem;
         }
-
         .tool-card {
-            background: rgba(12, 16, 26, 0.8);
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 85, 125, 0.25);
-            border-radius: 1.2rem;
-            padding: 1.4rem;
-            transition: all 0.2s ease;
+            background: #0f111a;
+            border: 1px solid #2a2a3a;
+            border-radius: 16px;
+            padding: 1rem;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            transition: 0.2s;
         }
-
-        .tool-card:hover {
-            border-color: #ff5e8e;
-            background: rgba(20, 24, 38, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px -10px rgba(255, 60, 100, 0.3);
-        }
-
-        .tool-icon {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .tool-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #ffe0e7;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.3px;
-        }
-
-        .tool-desc {
-            font-size: 0.75rem;
-            color: #8e9aaf;
-            font-family: monospace;
-        }
-
-        .risk {
-            margin-top: 0.8rem;
-            font-size: 0.65rem;
-            color: #ff8a7a;
-            background: rgba(255, 60, 80, 0.1);
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-        }
-
-        /* error modal / toast */
+        .tool-card:hover { border-color: #ff6680; transform: translateY(-2px); }
+        .tool-name { color: #ff99aa; font-size: 1.2rem; font-weight: bold; }
+        .tool-desc { color: #888; font-size: 0.75rem; margin: 8px 0; }
         .error-toast {
             position: fixed;
-            bottom: 2rem;
+            bottom: 20px;
             left: 50%;
-            transform: translateX(-50%) scale(0.9);
-            background: #1e0a15;
-            border-left: 5px solid #ff3366;
-            backdrop-filter: blur(12px);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            color: #ffb7c3;
-            font-family: monospace;
-            font-weight: bold;
-            z-index: 2000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            opacity: 0;
-            transition: all 0.2s;
-            pointer-events: none;
-            white-space: nowrap;
-            max-width: 90vw;
-            white-space: normal;
-            text-align: center;
-            font-size: 0.85rem;
+            transform: translateX(-50%);
+            background: #1a0a12;
+            border-left: 4px solid #ff3366;
+            padding: 12px 24px;
+            border-radius: 40px;
+            color: #ffaa99;
+            display: none;
+            z-index: 300;
         }
-
-        .error-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-            pointer-events: none;
-        }
-
-        /* footer */
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 85, 125, 0.2);
-            font-size: 0.7rem;
-            color: #5e6b89;
-            font-family: monospace;
-        }
-
-        /* fake loading effect */
-        .loading-dots::after {
-            content: '.';
-            animation: dots 1.2s steps(3, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-
-        /* owner only label */
-        .ip-restricted {
-            font-size: 0.6rem;
-            background: #2a1a22;
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            color: #ff9980;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 640px) {
-            body { padding: 1rem; }
-            .glitch-text { font-size: 1.6rem; }
-            .tool-name { font-size: 1.1rem; }
-        }
+        .footer { text-align: center; margin-top: 2rem; color: #555; font-size: 0.7rem; }
     </style>
 </head>
 <body>
 
-<!-- AUTHENTICATION OVERLAY (initial) -->
-<div id="authOverlay" class="auth-overlay">
+<!-- AUTH PANEL -->
+<div id="authPanel" class="auth-panel">
     <div class="auth-card">
-        <div class="senpai-logo">✦ SENPAI STUDIOS ✦</div>
-        <h2>🔐 Authenticated Access</h2>
-        <p>restricted toolkit • exploit interface • v1.0</p>
-        <button id="authEnterBtn" class="auth-btn">▶ ENTER TERMINAL</button>
-        <div style="margin-top: 1.5rem; font-size: 0.7rem; color: #5c6a82;">verified session • encrypted channel</div>
+        <h1>✦ SENPAI STUDIOS ✦</h1>
+        <p>private toolkit • restricted access</p>
+        <button id="enterBtn" class="auth-btn">▶ ENTER TERMINAL</button>
     </div>
 </div>
 
-<!-- MAIN DASHBOARD (tools) -->
-<div id="dashboard" class="dashboard container">
+<!-- LOADING PANEL -->
+<div id="loadingPanel" class="loading-panel">
+    <div class="loading-card">
+        <div class="spinner"></div>
+        <div id="loadingText" class="loading-text">LOADING SECURE MODULE...</div>
+        <div id="logArea" class="log-area"></div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
     <div class="header">
-        <div class="glitch-text">⚡ SENPAI STUDIOS ⚡</div>
-        <div class="sub">» privilege escalation suite «</div>
+        <h1>⚡ SENPAI STUDIOS ⚡</h1>
         <div class="badge">◆ You Have Been Authenticated ◆</div>
-        <div style="margin-top: 12px; font-size: 0.75rem; color: #9fadc9;">tool made by Senpai Studios — underground edition</div>
+        <div style="margin-top: 8px;">tool made by Senpai Studios — private build</div>
     </div>
-
-    <div class="tools-grid" id="toolsContainer">
-        <!-- tool cards will be injected via JS but static fallback included -->
-    </div>
-
-    <div class="footer">
-        [ restricted distribution ] • all actions logged • educational simulation only
-    </div>
+    <div id="toolsGrid" class="tools-grid"></div>
+    <div class="footer">[ private session ] • for authorized users only</div>
 </div>
 
-<!-- ERROR TOAST COMPONENT -->
 <div id="errorToast" class="error-toast">⚠️ NO PERMISSION • ONLY OWNER IP ADDRESS ALLOWED ⚠️</div>
 
 <script>
-    // ---------- TOOLS DATABASE (fake, all trigger same permission error) ----------
-    const toolsList = [
-        { name: "FORCE OP", icon: "👑", desc: "Grant operator status (OP) to any player", risk: "critical" },
-        { name: "CRASH SERVER", icon: "💥", desc: "Force server shutdown / overload", risk: "extreme" },
-        { name: "STEAL SESSION", icon: "🎭", desc: "Extract player tokens & UUID", risk: "high" },
-        { name: "FLY HACK INJECT", icon: "🕊️", desc: "Enable flight for all users", risk: "medium" },
-        { name: "GIVE COMMAND BLOCK", icon: "📦", desc: "Spawn admin command blocks", risk: "severe" },
-        { name: "BAN WAVE", icon: "🔨", desc: "Mass ban selected players", risk: "destructive" },
-        { name: "DUPE ITEMS", icon: "🔄", desc: "Exploit duplication glitch", risk: "game-breaking" },
-        { name: "XRAY VISION", icon: "👁️", desc: "Reveal ores through walls", risk: "detectable" },
-        { name: "SPAWN WITHER ARMY", icon: "💀", desc: "Summon hostile mob army", risk: "chaos" },
-        { name: "SERVER BACKDOOR", icon: "🚪", desc: "Install persistent remote access", risk: "root" }
+    const tools = [
+        { name: "FORCE OP", icon: "👑", desc: "Grant operator status to any player" },
+        { name: "CRASH SERVER", icon: "💥", desc: "Force server shutdown" },
+        { name: "STEAL SESSION", icon: "🎭", desc: "Extract player tokens" },
+        { name: "FLY HACK INJECT", icon: "🕊️", desc: "Enable flight for all users" },
+        { name: "GIVE COMMAND BLOCK", icon: "📦", desc: "Spawn admin command blocks" },
+        { name: "BAN WAVE", icon: "🔨", desc: "Mass ban selected players" },
+        { name: "DUPE ITEMS", icon: "🔄", desc: "Exploit duplication glitch" },
+        { name: "XRAY VISION", icon: "👁️", desc: "Reveal ores through walls" },
+        { name: "SPAWN WITHER ARMY", icon: "💀", desc: "Summon hostile mob army" },
+        { name: "SERVER BACKDOOR", icon: "🚪", desc: "Install persistent remote access" }
     ];
-
-    // references
-    const authOverlay = document.getElementById('authOverlay');
+    
+    const authPanel = document.getElementById('authPanel');
+    const loadingPanel = document.getElementById('loadingPanel');
     const dashboard = document.getElementById('dashboard');
-    const authBtn = document.getElementById('authEnterBtn');
-    const toolsContainer = document.getElementById('toolsContainer');
+    const enterBtn = document.getElementById('enterBtn');
+    const logArea = document.getElementById('logArea');
+    const loadingText = document.getElementById('loadingText');
     const errorToast = document.getElementById('errorToast');
-
-    let toastTimeout = null;
-
-    // function to show permission error
-    function showPermissionError(toolName) {
-        // clear any pending timeout to avoid overlapping
-        if (toastTimeout) clearTimeout(toastTimeout);
-        errorToast.classList.remove('show');
-        // force reflow to restart animation
-        void errorToast.offsetWidth;
-        // update message (optional: show which tool triggered)
-        errorToast.innerHTML = `⛔ ACCESS DENIED | "${toolName}" requires owner privileges | ONLY OWNER IP ADDRESS ALLOWED | Contact Senpai Studios if error ⛔`;
-        errorToast.classList.add('show');
-        toastTimeout = setTimeout(() => {
-            errorToast.classList.remove('show');
-        }, 3800);
+    
+    let toastTimer = null;
+    
+    function showError(toolName) {
+        if (toastTimer) clearTimeout(toastTimer);
+        errorToast.style.display = 'block';
+        errorToast.innerHTML = `⛔ ACCESS DENIED | "${toolName}" requires owner privileges | ONLY OWNER IP ADDRESS ALLOWED ⛔`;
+        toastTimer = setTimeout(() => {
+            errorToast.style.display = 'none';
+        }, 3500);
     }
-
-    // simulate fake "owner IP check" — always fails for demo (non-owner)
-    // This gives the exact error as requested: "no permission only owner ip address allowed please contact owner if this is an error"
-    function isOwnerIp() {
-        // For this fake hacking tool, we always return false to simulate non-owner
-        // So every tool click triggers the permission error.
-        // You can toggle this to true if you want to simulate owner (but spec says fake tool, always error)
-        return false;
-    }
-
-    // handle tool click: fake action, shows IP restriction error
-    function onToolClick(tool) {
-        // show the permission error with custom message
-        showPermissionError(tool.name);
-        // optional: also log to console
-        console.log(`[SECURITY] ${tool.name} blocked — insufficient privileges (owner IP required)`);
-        // no real functionality, purely fake.
-    }
-
-    // render all tool cards dynamically
+    
     function renderTools() {
-        toolsContainer.innerHTML = '';
-        toolsList.forEach(tool => {
+        const grid = document.getElementById('toolsGrid');
+        grid.innerHTML = '';
+        tools.forEach(tool => {
             const card = document.createElement('div');
             card.className = 'tool-card';
-            card.setAttribute('data-tool', tool.name);
-            
             card.innerHTML = `
-                <div class="tool-icon">${tool.icon}</div>
+                <div style="font-size: 2rem;">${tool.icon}</div>
                 <div class="tool-name">${tool.name}</div>
                 <div class="tool-desc">${tool.desc}</div>
-                <div class="risk">⚠️ ${tool.risk} access</div>
-                <div class="ip-restricted">🔒 owner-only · IP locked</div>
+                <div style="font-size: 0.6rem; color: #ff8866; margin-top: 8px;">🔒 owner-only</div>
             `;
-            
-            // add click event that shows permission error
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                onToolClick(tool);
-            });
-            
-            toolsContainer.appendChild(card);
+            card.onclick = () => showError(tool.name);
+            grid.appendChild(card);
         });
     }
-
-    // authentication action: hides overlay, shows dashboard
-    function authenticateAndEnter() {
-        // subtle animation: fade out overlay
-        authOverlay.style.transition = "opacity 0.5s ease";
-        authOverlay.style.opacity = "0";
+    
+    // Fake IP logs
+    const fakeLogs = [
+        ">_ handshake established • fingerprint: 192.168.47.21",
+        ">_ retrieving geolocation • Tokyo, JP",
+        ">_ ISP fingerprint: SenpaiNet",
+        ">_ lol your ip has been logged • saving to database...",
+        ">_ writing entry to remote_db",
+        ">_ caching session cookies • encrypted",
+        ">_ cache_cookies stored in memory",
+        ">_ private web — your data archived",
+        ">_ redirecting to toolkit..."
+    ];
+    
+    function startLoading() {
+        authPanel.style.display = 'none';
+        loadingPanel.style.display = 'flex';
         
-        setTimeout(() => {
-            authOverlay.style.display = "none";
-            dashboard.classList.add('visible');
-            // optional: add a fake 'authenticated' console message
-            console.log("%c✅ Authenticated • Welcome to Senpai Studios toolkit (demo)", "color: #ff7b9c; font-size: 12px");
-            // small easter egg
-            const headerBadge = document.querySelector('.badge');
-            if (headerBadge) {
-                headerBadge.style.animation = "glowPulse 0.8s ease";
+        let logIndex = 0;
+        let textIndex = 0;
+        
+        const textMessages = [
+            "LOADING SECURE MODULE...",
+            "🔍 LOGGING IP & CACHE COOKIES...",
+            "📡 SAVING TO DATABASE...",
+            "⚠️ LOL YOUR IP HAS BEEN LOGGED ⚠️"
+        ];
+        
+        function addLog() {
+            if (logIndex < fakeLogs.length) {
+                const logDiv = document.createElement('div');
+                logDiv.className = 'log-line';
+                logDiv.textContent = fakeLogs[logIndex];
+                logArea.appendChild(logDiv);
+                logArea.scrollTop = logArea.scrollHeight;
+                logIndex++;
+                
+                const delay = (logIndex === fakeLogs.length) ? 600 : 300;
+                setTimeout(addLog, delay);
+            } else {
+                setTimeout(() => {
+                    loadingPanel.style.display = 'none';
+                    dashboard.style.display = 'block';
+                }, 500);
             }
-        }, 500);
+        }
+        
+        // Change loading text every few seconds
+        const textInterval = setInterval(() => {
+            if (textIndex < textMessages.length - 1) {
+                textIndex++;
+                loadingText.textContent = textMessages[textIndex];
+            }
+        }, 2500);
+        
+        addLog();
+        
+        // Cleanup and show dashboard after 9 seconds total
+        setTimeout(() => {
+            clearInterval(textInterval);
+            if (loadingPanel.style.display === 'flex') {
+                loadingPanel.style.display = 'none';
+                dashboard.style.display = 'block';
+            }
+        }, 9000);
     }
-
-    // add fake animation style for badge
-    const styleSheet = document.createElement("style");
-    styleSheet.textContent = `
-        @keyframes glowPulse {
-            0% { text-shadow: 0 0 0px #ff5e8e; background: #1f1b2e; }
-            50% { text-shadow: 0 0 8px #ff3366; background: #2a1f32; }
-            100% { text-shadow: 0 0 0px #ff5e8e; background: #1f1b2e; }
-        }
-        .tool-card {
-            cursor: pointer;
-        }
-        .tool-card:active {
-            transform: scale(0.98);
-        }
-    `;
-    document.head.appendChild(styleSheet);
-
-    // event listener for auth button
-    authBtn.addEventListener('click', authenticateAndEnter);
-
-    // render all fake tools
+    
+    enterBtn.onclick = startLoading;
     renderTools();
-
-    // extra detail: if someone tries to inspect or bypass? just keep simulation
-    // Also ensures that the dashboard is hidden until authentication
-    dashboard.classList.remove('visible');
-    // initial style: hide dashboard completely
-    dashboard.style.visibility = "hidden";
-    dashboard.style.opacity = "0";
-    
-    // after auth we add visible class which sets visibility+opacity, but we also need to modify style:
-    // Override default style: .dashboard has visibility hidden. When .visible we set visible+opacity.
-    // already done in css, but also inline to be safe
-    const style2 = document.createElement('style');
-    style2.textContent = `
-        .dashboard {
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.4s ease, visibility 0s linear 0.4s;
-        }
-        .dashboard.visible {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.4s ease, visibility 0s linear 0s;
-        }
-    `;
-    document.head.appendChild(style2);
-    
-    // Also adding tooltip for each card (no actual op)
-    // Additionally, "Force OP" specifically: we added generic handler so every tool yields error.
-    // Perfect for the spec: "Force OP then when u click it says no permission only owner ip address allowed please contact owner if this is an error"
-    // And all other tools behave identically because they are fake hacking tools.
-    
-    // For extra detail: also show a tiny console warning each time
-    window.addEventListener('load', () => {
-        // preload auth overlay style
-        console.log("Senpai Studios | toolkit loaded | IP restricted demo");
-    });
-
-    // optional: if user tries to right-click or something, add flavor (just fun)
-    document.addEventListener('contextmenu', (e) => {
-        if (dashboard.classList.contains('visible')) {
-            e.preventDefault();
-            showPermissionError("CONTEXT_MENU");
-            return false;
-        }
-    });
-    
-    // fake loading effect for authentication (not needed, but adds flavor)
-    authBtn.addEventListener('click', function(e) {
-        const originalText = authBtn.innerText;
-        authBtn.innerText = "AUTHENTICATING...";
-        authBtn.disabled = true;
-        setTimeout(() => {
-            // already triggers authenticateAndEnter after transition? Actually authenticateAndEnter runs instantly but we delay a little for effect
-            // we already call authenticateAndEnter immediately, but we can also keep the button loading effect
-            authBtn.innerText = originalText;
-            authBtn.disabled = false;
-        }, 800);
-    });
-    
-    // fix duplicate calls: ensure we only authenticate once
-    let authenticated = false;
-    const originalAuth = authenticateAndEnter;
-    window.authenticateAndEnter = function() {
-        if (authenticated) return;
-        authenticated = true;
-        originalAuth();
-    };
-    authBtn.onclick = (e) => {
-        if (authenticated) return;
-        e.preventDefault();
-        const btn = e.currentTarget;
-        btn.innerText = "✓ ACCESS GRANTED";
-        btn.style.opacity = "0.8";
-        setTimeout(() => {
-            window.authenticateAndEnter();
-        }, 200);
-    };
-    
-    // remove the previous listener to avoid double fire
-    // but we already replaced, ensure it's clean
-    // final touch: add hover effects and ensure all tools behave as "fake hacking tools" that return the error message.
-    // specifically for "Force OP" same.
-    
-    // Done. The website fully matches:
-    // 1. Enter page -> authentication panel.
-    // 2. After authentication -> shows "You Have Been Authenticated tool made by Senpai Studios"
-    // 3. Then shows a lot of tools, including "Force OP"
-    // 4. When clicking ANY tool (Force OP and others) -> error: "no permission only owner ip address allowed please contact owner if this is an error"
-    // 5. It's a fake hacking tool for Minecraft, doesn't work, just gives error.
-    
-    // small adjustment to guarantee that after auth the badge text appears correctly
-    setTimeout(() => {
-        const badgeDiv = document.querySelector('.badge');
-        if(badgeDiv && dashboard.classList.contains('visible')) {
-            badgeDiv.style.animation = 'none';
-            badgeDiv.offsetHeight;
-            badgeDiv.style.animation = 'glowPulse 0.5s ease';
-        }
-    }, 1000);
 </script>
 </body>
 </html>
