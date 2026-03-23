@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ACCESS TERMINAL // SECURE GATEWAY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* hacker-style feel */
+        }
+
+        body {
+            background: #0a0c0f;
+            font-family: 'Courier New', 'Fira Code', 'Monaco', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* CRT flicker effect (subtle) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.02) 0px, rgba(0,255,0,0.02) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* main glass terminal panel */
+        .terminal {
+            max-width: 620px;
+            width: 100%;
+            background: #050a0e;
+            border: 1px solid #1f3b2c;
+            border-radius: 24px;
+            box-shadow: 0 0 28px rgba(0, 255, 65, 0.15), 0 0 8px rgba(0, 200, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(1px);
+            transition: all 0.2s;
+        }
+
+        /* header bar */
+        .term-header {
+            background: #0f161c;
+            padding: 0.9rem 1.5rem;
+            border-bottom: 1px solid #1e3a2f;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .title {
+            color: #3eff9e;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            text-shadow: 0 0 3px #0f0;
+        }
+        .status {
+            font-size: 0.7rem;
+            color: #6c8b7c;
+            font-family: monospace;
+        }
+        .status span {
+            color: #3eff9e;
+        }
+
+        /* content area */
+        .content {
+            padding: 2rem 1.8rem 2rem 1.8rem;
+        }
+
+        /* hacker blinking cursor */
+        .blink {
+            animation: blink-animation 1.2s step-end infinite;
+        }
+        @keyframes blink-animation {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* verify panel style (cloudflare fake) */
+        .verify-panel, .key-panel, .cooldown-panel {
+            background: #07110e;
+            border-left: 4px solid #2eff9e;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .glow-text {
+            color: #b3ffcf;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            word-break: break-word;
+        }
+
+        .fake-cf {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            background: #0a1113;
+            padding: 1rem;
+            border-radius: 14px;
+            margin: 1rem 0;
+            border: 1px solid #2b5a44;
+        }
+        .fake-cf-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 3px #0f0);
+        }
+        .verify-btn {
+            background: #111d18;
+            border: 1px solid #3eff9e;
+            color: #3eff9e;
+            font-family: monospace;
+            font-weight: bold;
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            box-shadow: 0 0 4px #1f9;
+        }
+        .verify-btn:hover {
+            background: #1e3a2a;
+            text-shadow: 0 0 4px #0f0;
+            box-shadow: 0 0 12px #2eff9e;
+        }
+
+        /* input hacker style */
+        .hacker-input {
+            background: #010101;
+            border: 1px solid #2a6e4b;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            font-family: monospace;
+            font-size: 1rem;
+            color: #b5ffcf;
+            border-radius: 8px;
+            margin: 0.8rem 0;
+            outline: none;
+            letter-spacing: 1px;
+        }
+        .hacker-input:focus {
+            border-color: #5affb0;
+            box-shadow: 0 0 10px #1eff8e;
+        }
+
+        .action-btn {
+            background: #0f1a15;
+            border: 1px solid #27e07b;
+            color: #b3ffc4;
+            padding: 0.6rem 1.8rem;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        .error-msg {
+            color: #ff6e7a;
+            font-size: 0.8rem;
+            margin-top: 0.8rem;
+            border-left: 2px solid #ff4d6d;
+            padding-left: 10px;
+        }
+
+        .countdown-clock {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #3eff9e;
+            text-align: center;
+            letter-spacing: 4px;
+            font-family: monospace;
+            text-shadow: 0 0 6px #0f0;
+            margin: 1rem 0;
+        }
+
+        .cooldown-timer {
+            font-family: monospace;
+            background: #0d1217;
+            padding: 0.8rem;
+            text-align: center;
+            border-radius: 12px;
+            color: #ffb347;
+        }
+
+        hr {
+            border-color: #1e462e;
+            margin: 0.8rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-badge {
+            background: #0f1a10;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #6effa8;
+        }
+
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            padding: 1rem;
+            color: #2c5542;
+            border-top: 1px solid #10261d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal" id="appRoot">
+    <div class="term-header">
+        <div class="title">>_ SECURE_GATEWAY v2.3.7</div>
+        <div class="status">[ ENCRYPTED ] <span>● ONLINE</span></div>
+    </div>
+
+    <div class="content" id="dynamicContent">
+        <!-- PHASE 0: FAKE CLOUDFLARE VERIFICATION -->
+        <div id="phaseVerify" class="verify-panel">
+            <div class="glow-text">
+                <span style="color:#ffb347;">⚠️ CLOUDFLARE</span> · protected gateway · <span style="color:#3eff9e;">verify integrity</span>
+            </div>
+            <div class="fake-cf">
+                <div class="fake-cf-icon">🌀☁️</div>
+                <div style="flex:1; font-size:0.85rem;">Checking your browser before accessing terminal ... <br> 
+                <span style="color:#97d4b5;">security check | TLS 1.3 | DDoS protection</span></div>
+            </div>
+            <button class="verify-btn" id="verifyBtn">► VERIFY I'M NOT A HUMAN</button>
+            <div style="margin-top: 12px; font-size:0.7rem; color:#446b58;">✔️ human verification required → cryptographic handshake</div>
+        </div>
+
+        <!-- PHASE 1: KEY INPUT PANEL (hidden initially) -->
+        <div id="phaseKey" class="key-panel hidden">
+            <div class="glow-text">
+                <span style="color:#2eff9e;">[ AUTHORIZATION REQUIRED ]</span><br>
+                Enter 128-bit master key to decrypt session.
+            </div>
+            <input type="password" id="secretKeyInput" class="hacker-input" placeholder=">_ KEY: XXXX-XXXX-XXXX-XXXX" autocomplete="off">
+            <button id="submitKeyBtn" class="action-btn">► UNLOCK GATEWAY</button>
+            <div id="keyError" class="error-msg hidden"></div>
+            <div id="cooldownArea" class="cooldown-timer hidden" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- PHASE 2: AUTHENTICATING + COUNTDOWN + REDIRECT (hidden until key success) -->
+        <div id="phaseAuth" class="key-panel hidden">
+            <div class="glow-text">
+                <span style="color:#ffd966;">🔐 AUTHENTICATING CREDENTIALS ...</span>
+            </div>
+            <div id="countdownDisplay" class="countdown-clock">⟳ INIT</div>
+            <div style="font-size:0.8rem; color:#98c1a5; text-align:center;">Establishing secure tunnel → handshake in progress</div>
+            <div style="margin-top: 1rem; background:#071008; padding: 8px; border-radius: 6px; font-size:0.7rem;">
+                <span id="authLog">>_ decrypting master token...</span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        [ encrypted channel ] • root access only • integrity check active
+    </footer>
+</div>
+
+<script>
+    // ------------------- CONSTANTS -------------------
+    const CORRECT_KEY = "AHW4-Q9C7-9ZLB-6S7Q";
+    const REDIRECT_URL = "https://mine-buddy-console.lovable.app/";
+    
+    // STATE MACHINE
+    let currentPhase = "verify";   // verify | key | auth | cooldown (cooldown is inside key phase)
+    let cooldownUntil = 0;         // timestamp (ms) when cooldown ends
+    let cooldownInterval = null;
+    let countdownInterval = null;
+    let isAuthenticating = false;   // prevent double auth
+    
+    // DOM elements
+    const phaseVerifyDiv = document.getElementById('phaseVerify');
+    const phaseKeyDiv = document.getElementById('phaseKey');
+    const phaseAuthDiv = document.getElementById('phaseAuth');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const submitKeyBtn = document.getElementById('submitKeyBtn');
+    const secretKeyInput = document.getElementById('secretKeyInput');
+    const keyErrorDiv = document.getElementById('keyError');
+    const cooldownArea = document.getElementById('cooldownArea');
+    const countdownDisplay = document.getElementById('countdownDisplay');
+    const authLogSpan = document.getElementById('authLog');
+    
+    // Helper: hide all phases, then show specific
+    function setPhase(phase) {
+        phaseVerifyDiv.classList.add('hidden');
+        phaseKeyDiv.classList.add('hidden');
+        phaseAuthDiv.classList.add('hidden');
+        if (phase === 'verify') phaseVerifyDiv.classList.remove('hidden');
+        if (phase === 'key') phaseKeyDiv.classList.remove('hidden');
+        if (phase === 'auth') phaseAuthDiv.classList.remove('hidden');
+        currentPhase = phase;
+    }
+    
+    // stop any running timers
+    function stopAllTimers() {
+        if (cooldownInterval) { clearInterval(cooldownInterval); cooldownInterval = null; }
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    }
+    
+    // render cooldown UI inside key phase (disabled input & button)
+    function updateCooldownUI() {
+        if (!cooldownArea) return;
+        const now = Date.now();
+        if (cooldownUntil > now) {
+            const remainingSec = Math.ceil((cooldownUntil - now) / 1000);
+            cooldownArea.classList.remove('hidden');
+            cooldownArea.innerHTML = `⛔ ACCESS LOCKED • wait ${remainingSec} second${remainingSec !== 1 ? 's' : ''} before retry<br><span style="font-size:0.7rem;">[BRUTE FORCE PROTECTION]</span>`;
+            // Disable input and button while on cooldown
+            secretKeyInput.disabled = true;
+            submitKeyBtn.disabled = true;
+            submitKeyBtn.style.opacity = "0.5";
+            submitKeyBtn.style.cursor = "not-allowed";
+            // also clear any old error
+            keyErrorDiv.classList.add('hidden');
+            keyErrorDiv.innerText = "";
+            
+            if (cooldownInterval) clearInterval(cooldownInterval);
+            cooldownInterval = setInterval(() => {
+                const now2 = Date.now();
+                if (now2 >= cooldownUntil) {
+                    // cooldown finished
+                    clearInterval(cooldownInterval);
+                    cooldownInterval = null;
+                    cooldownArea.classList.add('hidden');
+                    secretKeyInput.disabled = false;
+                    submitKeyBtn.disabled = false;
+                    submitKeyBtn.style.opacity = "1";
+                    submitKeyBtn.style.cursor = "pointer";
+                    keyErrorDiv.classList.add('hidden');
+                    // optional: reset input placeholder
+                } else {
+                    const rem = Math.ceil((cooldownUntil - now2) / 1000);
+                    cooldownArea.innerHTML = `⛔ ACCESS LOCKED • wait ${rem} second${rem !== 1 ? 's' : ''} before retry<br><span style="font-size:0.7rem;">[BRUTE FORCE PROTECTION]</span>`;
+                }
+            }, 200);
+        } else {
+            cooldownArea.classList.add('hidden');
+            secretKeyInput.disabled = false;
+            submitKeyBtn.disabled = false;
+            submitKeyBtn.style.opacity = "1";
+            submitKeyBtn.style.cursor = "pointer";
+            if (cooldownInterval) { clearInterval(cooldownInterval); cooldownInterval = null; }
+        }
+    }
+    
+    // start cooldown (60 seconds)
+    function startCooldown() {
+        cooldownUntil = Date.now() + 60000; // 1 minute = 60000ms
+        updateCooldownUI();
+        // also schedule periodic refresh
+        if (cooldownInterval) clearInterval(cooldownInterval);
+        cooldownInterval = setInterval(() => {
+            if (Date.now() >= cooldownUntil) {
+                clearInterval(cooldownInterval);
+                cooldownInterval = null;
+                updateCooldownUI();
+            } else {
+                updateCooldownUI();
+            }
+        }, 500);
+    }
+    
+    // reset key field, show error with cooldown
+    function handleWrongKey() {
+        if (isAuthenticating) return;
+        // show error message
+        keyErrorDiv.innerText = "[!] INVALID CRYPTO KEY • authorization rejected. terminal locked for 60 seconds.";
+        keyErrorDiv.classList.remove('hidden');
+        // clear input field
+        secretKeyInput.value = "";
+        // start cooldown (disable input & button)
+        startCooldown();
+        // also stop any pending authentication
+    }
+    
+    // AUTHENTICATION SUCCESS: start countdown from 5, then redirect
+    function startAuthCountdownAndRedirect() {
+        if (isAuthenticating) return;
+        isAuthenticating = true;
+        
+        // switch to auth phase
+        setPhase('auth');
+        let counter = 5;
+        countdownDisplay.innerText = `0:0${counter}`;
+        authLogSpan.innerHTML = ">_ verifying digital signature...<br>>_ key accepted. establishing secure relay...";
+        
+        // dynamic logging effect
+        let step = 0;
+        const stepsLogs = [
+            ">_ verifying digital signature...",
+            ">_ key accepted. establishing secure relay...",
+            ">_ handshake with master node...",
+            ">_ decrypting payload...",
+            ">_ redirecting to private console..."
+        ];
+        
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            if (counter <= 1) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                countdownDisplay.innerText = "⟳ REDIRECTING...";
+                authLogSpan.innerHTML = ">_ tunnel open. forwarding to secure environment...";
+                // FINAL REDIRECT
+                window.location.href = REDIRECT_URL;
+            } else {
+                counter--;
+                const minutes = Math.floor(counter / 60);
+                const secs = counter % 60;
+                countdownDisplay.innerText = `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+                // update logs with style
+                let idx = 5 - counter;
+                if (idx < stepsLogs.length && idx >= 0) {
+                    authLogSpan.innerHTML = stepsLogs[idx] + "<br>⏳ waiting for secure channel...";
+                } else {
+                    authLogSpan.innerHTML = `>_ authorization success • redirect in ${counter}s`;
+                }
+            }
+        }, 1000);
+    }
+    
+    // function triggered when user submits key
+    function onKeySubmit() {
+        // if currently in cooldown (disabled state) just ignore
+        if (secretKeyInput.disabled === true) {
+            // already locked, show message
+            keyErrorDiv.innerText = "[!] SECURITY LOCK ACTIVE • please wait before retrying.";
+            keyErrorDiv.classList.remove('hidden');
+            return;
+        }
+        if (isAuthenticating) return;
+        
+        const enteredKey = secretKeyInput.value.trim().toUpperCase();
+        if (enteredKey === CORRECT_KEY) {
+            // CORRECT KEY: stop any error display, clear cooldowns if any
+            keyErrorDiv.classList.add('hidden');
+            // stop cooldown UI if active
+            if (cooldownInterval) { clearInterval(cooldownInterval); cooldownInterval = null; }
+            cooldownArea.classList.add('hidden');
+            // start authentication & redirect flow
+            startAuthCountdownAndRedirect();
+        } else {
+            // WRONG KEY: show error, start cooldown (1 minute)
+            handleWrongKey();
+        }
+    }
+    
+    // EVENT: fake cloudflare verify -> move to key phase
+    function onCloudflareVerify() {
+        if (currentPhase !== 'verify') return;
+        // hacker style : brief animation / fake "bypass"
+        verifyBtn.innerText = "✓ VERIFYING...";
+        verifyBtn.disabled = true;
+        setTimeout(() => {
+            // move to key phase
+            setPhase('key');
+            // reset any cooldown / input state on fresh key phase
+            // but ensure no lingering cooldown from previous attempt
+            if (cooldownInterval) clearInterval(cooldownInterval);
+            cooldownInterval = null;
+            const now = Date.now();
+            if (cooldownUntil && cooldownUntil > now) {
+                // if there was a leftover cooldown, apply it again
+                updateCooldownUI();
+            } else {
+                cooldownUntil = 0;
+                cooldownArea.classList.add('hidden');
+                secretKeyInput.disabled = false;
+                submitKeyBtn.disabled = false;
+                submitKeyBtn.style.opacity = "1";
+                keyErrorDiv.classList.add('hidden');
+                secretKeyInput.value = "";
+            }
+            // small focus effect
+            secretKeyInput.focus();
+        }, 400);
+    }
+    
+    // add event listeners
+    verifyBtn.addEventListener('click', onCloudflareVerify);
+    submitKeyBtn.addEventListener('click', onKeySubmit);
+    secretKeyInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!secretKeyInput.disabled && currentPhase === 'key') {
+                onKeySubmit();
+            }
+        }
+    });
+    
+    // additional: initial state
+    setPhase('verify');
+    cooldownUntil = 0;
+    isAuthenticating = false;
+    // make sure no weird timer left
+    stopAllTimers();
+    
+    // hacker style: matrix-like random background text effect (tiny easter egg)
+    const style = document.createElement('style');
+    style.textContent = `
+        .hacker-input::placeholder {
+            color: #2c6b4e;
+            font-family: monospace;
+            opacity: 0.7;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+        .terminal {
+            transition: box-shadow 0.3s;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // small console log for elite feel
+    console.log("%c>_ TERMINAL_READY | ENCRYPTED NODE v2.0", "color: #0f0; font-family: monospace;");
+    
+    // protection: if someone tries to tamper with localStorage or devtools, just ignore
+    window.addEventListener('load', () => {
+        // preload cool vibe
+        setTimeout(() => {
+            if (currentPhase === 'verify') {
+                // just blink effect on verify button
+            }
+        }, 100);
+    });
+</script>
+</body>
+</html>
